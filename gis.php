@@ -49,7 +49,7 @@
 		<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
 			<!--begin::Page-->
 			<div class="app-page flex-column flex-column-fluid" id="kt_app_page">
-				<?php include 'partials/header.php'?>
+				<?php //include 'partials/header.php'?>
 				<!--begin::Wrapper-->
 				<div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
 					<?php include 'partials/sidebar.php' ?>
@@ -65,7 +65,7 @@
 							<!--end::Content-->
 						</div>
 						<!--end::Content wrapper-->
-						<?php include 'partials/footer.php' ?>
+						<?php //include 'partials/footer.php' ?>
 					</div>
 					<!--end:::Main-->
 				</div>

@@ -116,20 +116,20 @@
 
 			// Initialize the map and set its view to Santa Cruz, Laguna
 			var map = L.map('map').setView([14.282332, 121.423933], 13);
-			
+
 			map.zoomControl.remove();
 
 			L.control.zoom({
 				position: 'bottomright'
 			}).addTo(map);
 
-			// // Add a tile layer from OpenStreetMap
+			// Add a tile layer from OpenStreetMap
 			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-			  maxNativeZoom:19,
-        	  maxZoom:25
+				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+				maxNativeZoom: 19,
+				maxZoom: 25
 			}).addTo(map);
-			
+
 			// Add a tile layer from Google
 			// L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
 			// maxZoom: 20,
@@ -149,6 +149,8 @@
 					name: name // Add the name attribute as a property for the shape
 				};
 			}
+
+			const attributes = [];
 
 			// start::onEachFeature
 			function onEachFeature(feature, layer) {
@@ -181,11 +183,20 @@
 				layer.on('click', function (e) {
 					// Pan and zoom to the clicked polygon
 					map.fitBounds(e.target.getBounds(), {
-					padding: [50, 50]
+						padding: [50, 50]
 					});
 
 					// Open the popup with the property information
 					e.target.openPopup();
+				});
+
+				const checkAttributes = ['building', 'amenity'];
+
+				checkAttributes.forEach(attribute => {
+					const value = feature.properties[attribute];
+					if (value && !attributes.includes(value)) {
+						attributes.push(value);
+					}
 				});
 			}
 			// end::onEachFeature
@@ -204,19 +215,74 @@
 					const filePath = `data/${fileName}`;
 
 					fetch(filePath)
-					.then(response => response.json())
-					.then(data => {
-						const polygonLayer = L.geoJSON(data, {
-						style: styleFeature,
-						onEachFeature: onEachFeature
-						}).addTo(map);
-					})
-					.catch(error => {
-						console.error(`Error loading GeoJSON file '${fileName}':`, error);
-					});
+						.then(response => response.json())
+						.then(data => {
+							const polygonLayer = L.geoJSON(data, {
+								style: styleFeature,
+								onEachFeature: onEachFeature
+							}).addTo(map);
+
+							// Populate the attrib_table with the attributes
+							attributes.forEach(attribute => {
+								const row = document.createElement('tr');
+
+								const checkboxCell = document.createElement('td');
+								checkboxCell.className = 'px-3';
+								checkboxCell.style.width = '10px';
+								const checkboxDiv = document.createElement('div');
+								checkboxDiv.className = 'form-check form-check-sm';
+								const checkboxInput = document.createElement('input');
+								checkboxInput.type = 'checkbox';
+								checkboxInput.className = 'form-check-input';
+								checkboxInput.name = 'checkbox';
+								checkboxInput.value = attribute;
+								checkboxDiv.appendChild(checkboxInput);
+								checkboxCell.appendChild(checkboxDiv);
+								row.appendChild(checkboxCell);
+
+								const textCell = document.createElement('td');
+								textCell.style.paddingLeft = '0px';
+								textCell.textContent = attribute;
+								row.appendChild(textCell);
+
+								document.querySelector('#attrib_table tbody').appendChild(row);
+							});
+
+							// Add event listener to checkboxes
+							const checkboxes = document.querySelectorAll('input[name="checkbox"]');
+							checkboxes.forEach(checkbox => {
+								checkbox.addEventListener('change', () => {
+									const checkedCheckboxes = Array.from(document.querySelectorAll('input[name="checkbox"]:checked'))
+										.map(checkbox => checkbox.value);
+									console.log('Selected checkboxes:', checkedCheckboxes);
+								});
+							});
+						})
+						.catch(error => {
+							console.error(`Error loading GeoJSON file '${fileName}':`, error);
+						});
 				});
 			}
 			loadGeoJSONFiles();
+
+			const toggleButtons = document.querySelectorAll('.toggle-button');
+			toggleButtons.forEach(button => {
+				button.addEventListener('click', () => {
+					toggleButtons.forEach(btn => {
+						if (btn !== button) {
+							btn.classList.remove('btn-success');
+							btn.classList.add('btn-secondary');
+						} else {
+							btn.classList.remove('btn-secondary');
+							btn.classList.add('btn-success');
+						}
+					});
+
+					const selectedButton = button.dataset.button;
+            		console.log('Selected button:', selectedButton);
+
+				});
+			});
 		</script>
 	</body>
 	<!--end::Body-->

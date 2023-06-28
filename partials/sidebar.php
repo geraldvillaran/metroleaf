@@ -328,58 +328,16 @@
         </div>
         <!--end::Links-->
         <div class="mb-6">
-            <table class="table table-striped table-hover table-row-dashed">
-                <thead></thead>
+            <table class="table table-striped table-hover table-row-dashed" id="attrib_table">
                 <tbody>
+                    <!--                     
                     <tr >
                         <td class="px-3" style="width: 10px">
                             <div class="form-check form-check-sm">
                                 <input type="checkbox" class="form-check-input"></td>
                             </div>
                         <td style="padding-left: 0px">Hello</td>
-                    </tr>
-                    <tr >
-                        <td class="px-3" style="width: 10px">
-                            <div class="form-check form-check-sm">
-                                <input type="checkbox" class="form-check-input"></td>
-                            </div>
-                        <td style="padding-left: 0px">Hello</td>
-                    </tr>
-                    <tr >
-                        <td class="px-3" style="width: 10px">
-                            <div class="form-check form-check-sm">
-                                <input type="checkbox" class="form-check-input"></td>
-                            </div>
-                        <td style="padding-left: 0px">Hello</td>
-                    </tr>
-                    <tr >
-                        <td class="px-3" style="width: 10px">
-                            <div class="form-check form-check-sm">
-                                <input type="checkbox" class="form-check-input"></td>
-                            </div>
-                        <td style="padding-left: 0px">Hello</td>
-                    </tr>
-                    <tr >
-                        <td class="px-3" style="width: 10px">
-                            <div class="form-check form-check-sm">
-                                <input type="checkbox" class="form-check-input"></td>
-                            </div>
-                        <td style="padding-left: 0px">Hello</td>
-                    </tr>
-                    <tr >
-                        <td class="px-3" style="width: 10px">
-                            <div class="form-check form-check-sm">
-                                <input type="checkbox" class="form-check-input"></td>
-                            </div>
-                        <td style="padding-left: 0px">Hello</td>
-                    </tr>
-                    <tr >
-                        <td class="px-3" style="width: 10px">
-                            <div class="form-check form-check-sm">
-                                <input type="checkbox" class="form-check-input"></td>
-                            </div>
-                        <td style="padding-left: 0px">Hello</td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
         </div>
@@ -388,9 +346,19 @@
 </div>
 <!--end::Sidebar nav-->
 <div class="d-flex flex-column-auto flex-lg-row justify-content-center px-4 px-lg-4">
-    <button class="btn btn-sm btn-success flex-grow-1" style="border-radius: 0;"><i class="ki-outline ki-setting-3 fs-2"></i></button>
-    <button class="btn btn-sm btn-secondary flex-grow-1" style="border-radius: 0;"><i class="ki-outline ki-setting-3 fs-2"></i></button>
+    <button class="btn btn-sm btn-success flex-grow-1 toggle-button" style="border-radius: 0;" data-button="1">
+        <i class="ki-outline ki-setting-3 fs-2"></i>
+    </button>
+    <button class="btn btn-sm btn-secondary flex-grow-1 toggle-button" style="border-radius: 0;" data-button="2">
+        <i class="ki-outline ki-setting-3 fs-2"></i>
+    </button>
+    <script>
+        
+    </script>
+
+
 </div>
+
 
 <!--begin::Footer-->
 <div class="flex-column-auto d-flex flex-center px-4 px-lg-8 py-3 py-lg-8" id="kt_app_sidebar_footer">
@@ -706,7 +674,7 @@
             <!--end:Nav-->
             <!--begin::View more-->
             <div class="py-2 text-center border-top">
-                <a href="../../demo23/dist/pages/user-profile/activity.html" class="btn btn-color-gray-600 btn-active-color-primary">View All
+                <a href="#" class="btn btn-color-gray-600 btn-active-color-primary">View All
                 <i class="ki-outline ki-arrow-right fs-5"></i></a>
             </div>
             <!--end::View more-->

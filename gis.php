@@ -20,23 +20,23 @@
   		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 		  <style>
 			#map {
-			width: 100%;
-			height: 100vh;
+				width: 100%;
+				height: 100vh;
 			}
 
 			.sidebar {
-			height: 100vh;
-			overflow-y: auto;
+				height: 100vh;
+				overflow-y: auto;
 			}
 
 			.table-container {
-			height: 50%;
-			overflow-y: auto;
-			margin-bottom: 10px;
+				height: 50%;
+				overflow-y: auto;
+				margin-bottom: 10px;
 			}
 
 			.checkboxes {
-			margin-top: 10px;
+				margin-top: 10px;
 			}
 		</style>
 	</head>
@@ -116,10 +116,18 @@
 
 			// Initialize the map and set its view to Santa Cruz, Laguna
 			var map = L.map('map').setView([14.282332, 121.423933], 13);
+			
+			map.zoomControl.remove();
+
+			L.control.zoom({
+				position: 'bottomright'
+			}).addTo(map);
 
 			// // Add a tile layer from OpenStreetMap
 			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+			  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+			  maxNativeZoom:19,
+        	  maxZoom:25
 			}).addTo(map);
 			
 			// Add a tile layer from Google
@@ -142,150 +150,72 @@
 				};
 			}
 
-
+			// start::onEachFeature
 			function onEachFeature(feature, layer) {
-		// Generate mock data for real estate properties
-		const propertyData = {
-			name: feature.properties.name || 'No name available',
-			owner: 'Benito Ong',
-			address: '123 Main St',
-			price: 'Php 500,000',
-			bedrooms: 3,
-			bathrooms: 2,
-			area: '2,000 sq ft',
-			description: 'Spacious and modern property located in a prime location.',
-		};
+				// Generate mock data for real estate properties
+				const propertyData = {
+					name: feature.properties.name || 'Unregistered Property',
+					owner: 'Benito Ong',
+					address: '123 Main St',
+					price: 'Php 500,000',
+					bedrooms: 3,
+					bathrooms: 2,
+					area: '2,000 sq ft',
+					description: 'Spacious and modern property located in a prime location.',
+				};
 
-		// Generate the popup content using the mock data
-		const popupContent = `
-			<h3>${propertyData.name}</h3>
-			<p><strong>Owner:</strong> ${propertyData.owner}</p>
-			<p><strong>Address:</strong> ${propertyData.address}</p>
-			<p><strong>Assessment Value:</strong> ${propertyData.price}</p>
-			<p><strong>Area:</strong> ${propertyData.area}</p>
-			<p><strong>Description:</strong> ${propertyData.description}</p>
-		`;
+				// Generate the popup content using the mock data
+				const popupContent = `
+					<h3>${propertyData.name}</h3>
+					<p><strong>Owner:</strong> ${propertyData.owner}</p>
+					<p><strong>Address:</strong> ${propertyData.address}</p>
+					<p><strong>Assessment Value:</strong> ${propertyData.price}</p>
+					<p><strong>Area:</strong> ${propertyData.area}</p>
+					<p><strong>Description:</strong> ${propertyData.description}</p>
+				`;
 
-		// Bind the popup with the generated content to the layer
-		layer.bindPopup(popupContent);
+				// Bind the popup with the generated content to the layer
+				layer.bindPopup(popupContent);
 
-		// Add click event listener
-		layer.on('click', function (e) {
-			// Pan and zoom to the clicked polygon
-			map.fitBounds(e.target.getBounds(), {
-			padding: [50, 50]
-			});
+				// Add click event listener
+				layer.on('click', function (e) {
+					// Pan and zoom to the clicked polygon
+					map.fitBounds(e.target.getBounds(), {
+					padding: [50, 50]
+					});
 
-			// Open the popup with the property information
-			e.target.openPopup();
-		});
-		}
+					// Open the popup with the property information
+					e.target.openPopup();
+				});
+			}
+			// end::onEachFeature
 
 			// Function to load the GeoJSON data and add it to the map
 			function loadGeoJSONFiles() {
-			// Load other GeoJSON files
-			// Load lines and points
-			// const otherFiles = ['santacruz_lines.geojson', 'santacruz_point.geojson'];
+				// Array of GeoJSON file names in the 'data' directory
+				const fileNames = [
+					'laguna_boundary.geojson',
+					'buildings.geojson',
+					// Add more file names here
+				];
 
-			// otherFiles.forEach(file => {
-			// 	fetch(file)
-			// 	.then(response => response.json())
-			// 	.then(data => {
-			// 		L.geoJSON(data, {
-			// 		style: styleFeature,
-			// 		onEachFeature: onEachFeature
-			// 		}).addTo(map);
-			// 	})
-			// 	.catch(error => {
-			// 		console.error('Error loading GeoJSON data:', error);
-			// 	});
-			// });
+				// Process each GeoJSON file
+				fileNames.forEach(fileName => {
+					const filePath = `data/${fileName}`;
 
-			// Load the santacruz_multipolygon.geojson file separately
-			const multipolygonFile = 'data/santacruz_multipolygon.geojson';
-
-			fetch(multipolygonFile)
-				.then(response => response.json())
-				.then(data => {
-				// const polygonTable = document.getElementById('polygon-table');
-
-				// data.features.forEach((feature, index) => {
-				// 	const row = document.createElement('tr');
-				// 	const nameCell = document.createElement('td');
-
-				// 	nameCell.textContent = feature.properties.name || `Polygon ${index + 1}`;
-				// 	row.appendChild(nameCell);
-				// 	polygonTable.appendChild(row);
-
-				// 	row.addEventListener('click', () => {
-				// 	const polygon = polygonLayer.getLayers()[index];
-				// 	map.fitBounds(polygon.getBounds(), {
-				// 		padding: [50, 50]
-				// 	});
-				// 	polygon.openPopup();
-				// 	});
-				// });
-
-				const polygonLayer = L.geoJSON(data, {
-					style: styleFeature,
-					onEachFeature: onEachFeature
-				}).addTo(map);
-
-				// Event listeners for checkbox changes
-				// const residentialCheckbox = document.getElementById('residentialCheckbox');
-				// const commercialCheckbox = document.getElementById('commercialCheckbox');
-				// const agriCheckbox = document.getElementById('agriCheckbox');
-
-				// residentialCheckbox.addEventListener('change', function () {
-				// 	const residentialShapes = ['Barangay I', 'Barangay IV']; // Replace with your residential shape names
-				// 	if (this.checked) {
-				// 	residentialShapes.forEach(shape => {
-				// 		const residentialPolygons = polygonLayer.getLayers().filter(layer => layer.feature.properties.name === shape);
-				// 		residentialPolygons.forEach(polygon => map.addLayer(polygon));
-				// 	});
-				// 	} else {
-				// 	residentialShapes.forEach(shape => {
-				// 		const residentialPolygons = polygonLayer.getLayers().filter(layer => layer.feature.properties.name === shape);
-				// 		residentialPolygons.forEach(polygon => map.removeLayer(polygon));
-				// 	});
-				// 	}
-				// });
-
-				// commercialCheckbox.addEventListener('change', function () {
-				// 	const commercialShapes = ['Barangay V', 'Barangay III', 'Barangay II']; // Replace with your commercial shape names
-				// 	if (this.checked) {
-				// 	commercialShapes.forEach(shape => {
-				// 		const commercialPolygons = polygonLayer.getLayers().filter(layer => layer.feature.properties.name === shape);
-				// 		commercialPolygons.forEach(polygon => map.addLayer(polygon));
-				// 	});
-				// 	} else {
-				// 	commercialShapes.forEach(shape => {
-				// 		const commercialPolygons = polygonLayer.getLayers().filter(layer => layer.feature.properties.name === shape);
-				// 		commercialPolygons.forEach(polygon => map.removeLayer(polygon));
-				// 	});
-				// 	}
-				// });
-
-				// agriCheckbox.addEventListener('change', function () {
-				// 	const agriShapes = ['Bagumbayan']; // Replace with your agricultural shape names
-				// 	if (this.checked) {
-				// 	agriShapes.forEach(shape => {
-				// 		const agriPolygons = polygonLayer.getLayers().filter(layer => layer.feature.properties.name === shape);
-				// 		agriPolygons.forEach(polygon => map.addLayer(polygon));
-				// 	});
-				// 	} else {
-				// 	agriShapes.forEach(shape => {
-				// 		const agriPolygons = polygonLayer.getLayers().filter(layer => layer.feature.properties.name === shape);
-				// 		agriPolygons.forEach(polygon => map.removeLayer(polygon));
-				// 	});
-				// 	}
-				// });
-				})
-				.catch(error => {
-				console.error('Error loading GeoJSON data:', error);
+					fetch(filePath)
+					.then(response => response.json())
+					.then(data => {
+						const polygonLayer = L.geoJSON(data, {
+						style: styleFeature,
+						onEachFeature: onEachFeature
+						}).addTo(map);
+					})
+					.catch(error => {
+						console.error(`Error loading GeoJSON file '${fileName}':`, error);
+					});
 				});
 			}
-
 			loadGeoJSONFiles();
 		</script>
 	</body>

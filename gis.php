@@ -111,8 +111,10 @@
 		<!--end::Custom Javascript-->
 		<!--end::Javascript-->
 		<script>
-			// Define a color palette
-			const colorPalette = ['#22A699', '#F2BE22', '#F29727', '#F24C3D', '#42FFC9', '#4292FF'];
+			let checkedCheckboxes = [];
+			const attributes = [];
+			let selectedButton = '1';
+			const fillColor = '#22A699';
 
 			// Initialize the map and set its view to Santa Cruz, Laguna
 			var map = L.map('map').setView([14.282332, 121.423933], 13);
@@ -136,21 +138,19 @@
 			// subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
 			// }).addTo(map);
 
+			// Modify the styleFeature function
 			function styleFeature(feature) {
-				const name = feature.properties.name;
-				const index = name ? [...name].reduce((sum, char) => sum + char.charCodeAt(0), 0) % colorPalette.length : 0;
-				const fillColor = colorPalette[index];
+				const attributeValue = feature.properties.attribute; // Replace 'attribute' with the actual attribute property name
+				const isSelected = checkedCheckboxes.includes(attributeValue);
 
 				return {
-					fillColor: fillColor,
+					fillColor: isSelected ? 'red' : fillColor, // Assign red fill color if the attribute value is selected
 					fillOpacity: 0.3,
 					weight: 1,
 					color: 'white',
-					name: name // Add the name attribute as a property for the shape
+					name: feature.properties.name // Add the name attribute as a property for the shape
 				};
 			}
-
-			const attributes = [];
 
 			// start::onEachFeature
 			function onEachFeature(feature, layer) {
@@ -252,17 +252,21 @@
 							const checkboxes = document.querySelectorAll('input[name="checkbox"]');
 							checkboxes.forEach(checkbox => {
 								checkbox.addEventListener('change', () => {
-									const checkedCheckboxes = Array.from(document.querySelectorAll('input[name="checkbox"]:checked'))
-										.map(checkbox => checkbox.value);
-									console.log('Selected checkboxes:', checkedCheckboxes);
+								checkedCheckboxes = Array.from(document.querySelectorAll('input[name="checkbox"]:checked'))
+									.map(checkbox => checkbox.value);
+
+								console.log('Selected Mode:', selectedButton);
+								console.log('Selected Attributes:', checkedCheckboxes);
+								applyAttributeFilter();
 								});
 							});
 						})
 						.catch(error => {
 							console.error(`Error loading GeoJSON file '${fileName}':`, error);
-						});
+					});
 				});
 			}
+
 			loadGeoJSONFiles();
 
 			const toggleButtons = document.querySelectorAll('.toggle-button');
@@ -278,11 +282,84 @@
 						}
 					});
 
-					const selectedButton = button.dataset.button;
-            		console.log('Selected button:', selectedButton);
+					selectedButton = button.dataset.button;
+            		console.log('Selected Mode:', selectedButton);
+					console.log('Selected Attributes:', checkedCheckboxes);
+					applyAttributeFilter();
 
 				});
 			});
+
+			function applyAttributeFilter() {
+				const layers = map._layers;
+
+				Object.keys(layers).forEach(layerId => {
+					const layer = layers[layerId];
+
+					if (layer.feature && layer.feature.properties) {
+						const attributesToCheck = ['building', 'amenity'];
+						const isSelected = attributesToCheck.some(attribute => {
+						const attributeValue = layer.feature.properties[attribute];
+						return checkedCheckboxes.includes(attributeValue);
+						});
+
+						if (isSelected) {
+							layer.setStyle({ fillColor: 'red' });
+						} else {
+							layer.setStyle({ fillColor: fillColor });
+						}
+					}
+				});
+			}
+
+			// Event listener for zoomend event
+  map.on('zoomend', function() {
+    const currentZoom = map.getZoom();
+    
+    // Check the current zoom level
+    if (currentZoom >= 14) {
+      hideFeatures(['Santa Cruz', 'Laguna']);
+    } else {
+      showFeatures(['Santa Cruz', 'Laguna']);
+    }
+  });
+
+  let hiddenLayers = [];
+
+  function hideFeatures(names) {
+    const layers = map._layers;
+
+    Object.keys(layers).forEach(layerId => {
+      const layer = layers[layerId];
+
+      if (layer.feature && layer.feature.properties) {
+        const name = layer.feature.properties.name;
+
+        // Check if the feature's name is in the names array
+        if (names.includes(name)) {
+          map.removeLayer(layer);
+
+          // Add the layer to the hiddenLayers array
+          hiddenLayers.push(layer);
+        }
+      }
+    });
+  }
+
+  function showFeatures(names) {
+    hiddenLayers.forEach(layer => {
+      const name = layer.feature.properties.name;
+
+      // Check if the feature's name is in the names array
+      if (names.includes(name)) {
+        map.addLayer(layer);
+      }
+    });
+
+    // Clear the hiddenLayers array
+    hiddenLayers = [];
+  }
+
 		</script>
 	</body>
 	<!--end::Body-->

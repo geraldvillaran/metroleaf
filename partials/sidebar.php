@@ -1,12 +1,17 @@
 <!--begin::Sidebar-->
 <div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="275px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_toggle">
 <!--begin::Logo-->
-<div class="d-flex flex-stack px-4 px-lg-6 py-3 py-lg-8" id="kt_app_sidebar_logo">
+<div class="d-flex flex-stack px-4 px-lg-6 py-3 py-lg-6" id="kt_app_sidebar_logo">
     <!--begin::Logo image-->
-    <a href="#">
-        <img alt="Logo" src="assets/media/logos/demo23.svg" class="h-20px h-lg-25px theme-light-show" />
-        <img alt="Logo" src="assets/media/logos/demo23-dark.svg" class="h-20px h-lg-25px theme-dark-show" />
-    </a>
+    <div class="row p-0 m-0 align-items-center">
+        <div class="col p-0 m-0">
+            <img alt="Logo" src="assets/media/logos/logo.png" class="h-50px h-lg-50px" />
+        </div>
+        <div class="col md-8">
+            <h2 style="display: flex; align-items: center; height: 100%;">GIS</h2>
+        </div>
+    </div>
+
     <!--end::Logo image-->
     <!--begin::User menu-->
     <div class="ms-3">

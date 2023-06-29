@@ -160,21 +160,52 @@
 					owner: 'Benito Ong',
 					address: '123 Main St',
 					price: 'Php 500,000',
-					bedrooms: 3,
-					bathrooms: 2,
+					latitude: 37.7749,
+					longitude: -122.4194,
 					area: '2,000 sq ft',
 					description: 'Spacious and modern property located in a prime location.',
 				};
 
 				// Generate the popup content using the mock data
-				const popupContent = `
-					<h3>${propertyData.name}</h3>
-					<p><strong>Owner:</strong> ${propertyData.owner}</p>
-					<p><strong>Address:</strong> ${propertyData.address}</p>
-					<p><strong>Assessment Value:</strong> ${propertyData.price}</p>
-					<p><strong>Area:</strong> ${propertyData.area}</p>
-					<p><strong>Description:</strong> ${propertyData.description}</p>
-				`;
+// Generate the popup content using the mock data
+const popupContent = `
+  <div class="p-0" style="text-align: center;">
+    <img src="assets/media/real-property/01.jpg" alt="Property Image" style="width: 100%; padding: 0px; height: auto;">
+  </div>
+  <h3 class="pt-3">${propertyData.name}</h3>
+  <table style="text-align: left;">
+    <tr>
+      <th>Owner</th>
+      <td>${propertyData.owner}</td>
+    </tr>
+    <tr>
+      <th>Address</th>
+      <td>${propertyData.address}</td>
+    </tr>
+    <tr>
+      <th>Longitude</th>
+      <td>${propertyData.latitude}</td>
+    </tr>
+    <tr>
+      <th>Longitude</th>
+      <td>${propertyData.longitude}</td>
+    </tr>
+    <tr>
+      <th>Assessment Value</th>
+      <td>${propertyData.price}</td>
+    </tr>
+    <tr>
+      <th>Area</th>
+      <td>${propertyData.area}</td>
+    </tr>
+    <tr>
+      <th>Description</th>
+      <td>${propertyData.description}</td>
+    </tr>
+  </table>
+`;
+
+
 
 				// Bind the popup with the generated content to the layer
 				layer.bindPopup(popupContent);
@@ -313,53 +344,52 @@
 			}
 
 			// Event listener for zoomend event
-  map.on('zoomend', function() {
-    const currentZoom = map.getZoom();
-    
-    // Check the current zoom level
-    if (currentZoom >= 14) {
-      hideFeatures(['Santa Cruz', 'Laguna']);
-    } else {
-      showFeatures(['Santa Cruz', 'Laguna']);
-    }
-  });
+			map.on('zoomend', function() {
+				const currentZoom = map.getZoom();
+				
+				// Check the current zoom level
+				if (currentZoom >= 14) {
+				hideFeatures(['Santa Cruz', 'Laguna', 'Barangay I', 'Barangay II', 'Barangay III', 'Barangay IV', 'Barangay V', 'Barangay VI']);
+				} else {
+				showFeatures(['Santa Cruz', 'Laguna']);
+				}
+			});
 
-  let hiddenLayers = [];
+			let hiddenLayers = [];
 
-  function hideFeatures(names) {
-    const layers = map._layers;
+			function hideFeatures(names) {
+				const layers = map._layers;
 
-    Object.keys(layers).forEach(layerId => {
-      const layer = layers[layerId];
+				Object.keys(layers).forEach(layerId => {
+				const layer = layers[layerId];
 
-      if (layer.feature && layer.feature.properties) {
-        const name = layer.feature.properties.name;
+				if (layer.feature && layer.feature.properties) {
+					const name = layer.feature.properties.name;
 
-        // Check if the feature's name is in the names array
-        if (names.includes(name)) {
-          map.removeLayer(layer);
+					// Check if the feature's name is in the names array
+					if (names.includes(name)) {
+					map.removeLayer(layer);
 
-          // Add the layer to the hiddenLayers array
-          hiddenLayers.push(layer);
-        }
-      }
-    });
-  }
+					// Add the layer to the hiddenLayers array
+					hiddenLayers.push(layer);
+					}
+				}
+				});
+			}
 
-  function showFeatures(names) {
-    hiddenLayers.forEach(layer => {
-      const name = layer.feature.properties.name;
+			function showFeatures(names) {
+				hiddenLayers.forEach(layer => {
+				const name = layer.feature.properties.name;
 
-      // Check if the feature's name is in the names array
-      if (names.includes(name)) {
-        map.addLayer(layer);
-      }
-    });
+				// Check if the feature's name is in the names array
+				if (names.includes(name)) {
+					map.addLayer(layer);
+				}
+				});
 
-    // Clear the hiddenLayers array
-    hiddenLayers = [];
-  }
-
+				// Clear the hiddenLayers array
+				hiddenLayers = [];
+			}
 		</script>
 	</body>
 	<!--end::Body-->

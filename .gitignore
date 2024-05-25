@@ -1,0 +1,102 @@
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor directories and files #
+################################
+.idea
+.vscode
+*.sublime-workspace
+*.sublime-project
+
+# Dependencies #
+################
+/vendor/
+/node_modules/
+
+# Specific to PHP projects #
+############################
+composer.lock
+composer.phar
+
+# Common PHP artifact files #
+############################
+*.log
+*.cache
+*.blade.php
+*.swp
+*.swo
+
+# PHPunit #
+###########
+/phpunit.xml
+/vendor/bin/phpunit
+/phpunit.xml.dist
+/test-report.xml
+/coverage/
+
+# Environment files #
+#####################
+.env
+.env.local
+.env.*.local
+
+# Docker #
+##########
+# .dockerignore
+# Dockerfile
+
+# Ignored config files #
+########################
+/config/*.local.php
+
+# Caching directories #
+#######################
+/cache
+/tmp
+
+# User-specific files #
+#######################
+*.sftp-config.json
+.sftp-config.json
+.sftp-config.json.bak
+
+# Exported databases #
+######################
+*.sql
+*.sql.gz
+*.csv
+
+# Other commonly ignored files #
+################################
+*.sln
+*.suo
+*.tmp
+*.user
+*.cache
+*.csproj
+*.vbproj
+*.log
+*.sqlite
+*.tar.gz
+*.zip
+*.7z
+*.rar
+*.exe
+*.dll
+*.pdb
+*.mdb
+*.ini
+*.info
+*.eggs
+*.pyc
+*.pyo
+*.pyd
+*.pickle
+*.orig
